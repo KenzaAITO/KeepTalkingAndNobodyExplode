@@ -1,0 +1,373 @@
+[
+    {
+        "id": "62f1ca3c0535995c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "406ceabf7c556cca",
+        "type": "function",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "func": "\nflow.set(\"timer\",300);\n\nmsg.payload = flow.get(\"timer\");\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 60,
+        "wires": [
+            [
+                "40577e4fdd731fc7"
+            ]
+        ]
+    },
+    {
+        "id": "40577e4fdd731fc7",
+        "type": "ui_text",
+        "z": "62f1ca3c0535995c",
+        "group": "a94f27ea1c93b4d2",
+        "order": 6,
+        "width": "3",
+        "height": "1",
+        "name": "",
+        "label": "Décompte",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "text-align: right;",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 830,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e8789f8903a9ab7d",
+        "type": "delay",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 460,
+        "y": 120,
+        "wires": [
+            [
+                "fb3489460594a2dd"
+            ]
+        ]
+    },
+    {
+        "id": "22cfeb7124dff484",
+        "type": "function",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "func": "flow.set(\"timer_run\",1);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 100,
+        "wires": [
+            [
+                "e8789f8903a9ab7d"
+            ]
+        ]
+    },
+    {
+        "id": "fb3489460594a2dd",
+        "type": "function",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "func": "msg.payload = flow.get(\"timer\"); \nrun = flow.get(\"timer_run\");\n\nif (run == 1 && msg.payload > 1){\n    // on décompte 1 seconde\n    msg.payload = msg.payload-1;\n    // on sauvegarde la nouvelle valeur\n    flow.set(\"timer\",msg.payload);\n    return msg;\n}else if (msg.payload == 1){\n    msg.payload = \"Terminé !\"\n    // pour ne plus boucler si terminé\n    flow.set(\"timer\",0);\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 120,
+        "wires": [
+            [
+                "40577e4fdd731fc7",
+                "e8789f8903a9ab7d"
+            ]
+        ]
+    },
+    {
+        "id": "fece9300dd4e907d",
+        "type": "ui_button",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "group": "a94f27ea1c93b4d2",
+        "order": 1,
+        "width": "4",
+        "height": "1",
+        "passthru": false,
+        "label": "Lancer la partie",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "justify-content: center",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 100,
+        "y": 80,
+        "wires": [
+            [
+                "406ceabf7c556cca",
+                "22cfeb7124dff484"
+            ]
+        ]
+    },
+    {
+        "id": "573f493160bd920d",
+        "type": "switch",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 630,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "efe37e5d1039f70b",
+        "type": "can-listen",
+        "z": "62f1ca3c0535995c",
+        "can": "987e4c8e627fa3ab",
+        "message": "123",
+        "signal": "signal_test",
+        "name": "",
+        "onupdate": false,
+        "x": 240,
+        "y": 280,
+        "wires": [
+            [
+                "f5c3d71d53a2f921",
+                "5dd237a319fe084a"
+            ]
+        ]
+    },
+    {
+        "id": "f5c3d71d53a2f921",
+        "type": "can-read",
+        "z": "62f1ca3c0535995c",
+        "can": "987e4c8e627fa3ab",
+        "message": "123",
+        "signal": "signal_test",
+        "name": "",
+        "x": 440,
+        "y": 340,
+        "wires": [
+            [
+                "573f493160bd920d"
+            ]
+        ]
+    },
+    {
+        "id": "82e44e1b87f994d7",
+        "type": "can-update",
+        "z": "62f1ca3c0535995c",
+        "can": "987e4c8e627fa3ab",
+        "message": "123",
+        "signal": "signal-test",
+        "oneshoot": false,
+        "name": "",
+        "x": 510,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "5dd237a319fe084a",
+        "type": "debug",
+        "z": "62f1ca3c0535995c",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "fa9a37040711dc10",
+        "type": "inject",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"payload\":[123]}",
+        "payloadType": "json",
+        "x": 240,
+        "y": 440,
+        "wires": [
+            [
+                "82e44e1b87f994d7"
+            ]
+        ]
+    },
+    {
+        "id": "a82827b51c790561",
+        "type": "ui_button",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "group": "1604523ee1f1b153",
+        "order": 3,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "Jeu Labyrinthe",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 660,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8a1b4b49a6dc22a2",
+        "type": "ui_button",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "group": "1604523ee1f1b153",
+        "order": 2,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "Jeu Simon",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 870,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5deb8e1623377525",
+        "type": "ui_button",
+        "z": "62f1ca3c0535995c",
+        "name": "",
+        "group": "1604523ee1f1b153",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "Jeu des fils",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1050,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a94f27ea1c93b4d2",
+        "type": "ui_group",
+        "name": "Compte_a_rebours",
+        "tab": "8e6873dc1626fea9",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "987e4c8e627fa3ab",
+        "type": "can-config",
+        "name": "",
+        "socket": "vcan0",
+        "bus": "1",
+        "dbFile": "test"
+    },
+    {
+        "id": "1604523ee1f1b153",
+        "type": "ui_group",
+        "name": "jeux",
+        "tab": "8e6873dc1626fea9",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8e6873dc1626fea9",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
